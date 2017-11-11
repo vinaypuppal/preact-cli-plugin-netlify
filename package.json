@@ -1,6 +1,6 @@
 {
   "name": "preact-cli-plugin-netlify",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Preact cli plugin for generating h2push headers and redirect rules for netlify",
   "main": "index.js",
   "scripts": {
@@ -9,7 +9,12 @@
     "lint": "xo",
     "test": "npm run lint"
   },
-  "keywords": ["preact", "plugin", "netlify", "h2push"],
+  "keywords": [
+    "preact",
+    "plugin",
+    "netlify",
+    "h2push"
+  ],
   "author": "Vinay Puppal <me@vinaypuppal.com> (https://www.vinaypuppal.com/)",
   "license": "MIT",
   "repository": {
@@ -30,8 +35,12 @@
   },
   "xo": {
     "parser": "babel-eslint",
-    "extends": ["prettier"],
-    "env": ["node"],
+    "extends": [
+      "prettier"
+    ],
+    "env": [
+      "node"
+    ],
     "rules": {
       "linebreak-style": 0
     },
