@@ -7,8 +7,9 @@ class NetlifyServerPushPlugin {
   apply(compiler) {
     compiler.plugin('emit', (compilation, callback) => {
       const routes = [];
-      let mainJs;
-      let mainCss;
+      // Set default value as comment incase if this file is not present
+      let mainJs = '# no js files';
+      let mainCss = '# no css files';
 
       for (const filename in compilation.assets) {
         if (!/\.map$/.test(filename)) {
