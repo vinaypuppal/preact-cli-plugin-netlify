@@ -1,0 +1,47 @@
+{
+  "name": "preact-cli-plugin-netlify",
+  "version": "1.0.0",
+  "description": "Preact cli plugin for generating h2push headers and redirect rules for netlify",
+  "main": "index.js",
+  "scripts": {
+    "prepublish": "npm run lint",
+    "precommit": "lint-staged",
+    "lint": "xo",
+    "test": "npm run lint"
+  },
+  "keywords": ["preact", "plugin", "netlify", "h2push"],
+  "author": "Vinay Puppal <me@vinaypuppal.com> (https://www.vinaypuppal.com/)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vinaypuppal/preact-cli-plugin-netlify.git"
+  },
+  "bugs": {
+    "url": "https://github.com/vinaypuppal/preact-cli-plugin-netlify/issues"
+  },
+  "homepage": "https://github.com/vinaypuppal/preact-cli-plugin-netlify#readme",
+  "devDependencies": {
+    "babel-eslint": "^8.0.2",
+    "eslint-config-prettier": "^2.7.0",
+    "husky": "^0.14.3",
+    "lint-staged": "^4.3.0",
+    "prettier": "^1.8.2",
+    "xo": "^0.18.2"
+  },
+  "xo": {
+    "parser": "babel-eslint",
+    "extends": ["prettier"],
+    "env": ["node"],
+    "rules": {
+      "linebreak-style": 0
+    },
+    "space:": 2
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier --write --single-quote --print-width=80 --trailing-comma=all",
+      "xo",
+      "git add"
+    ]
+  }
+}

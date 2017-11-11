@@ -1,0 +1,81 @@
+/**
+ * Generates Netlify HTTP2 Server Push headers and redirect rules for preact-cli
+ * A lot of this code is borrowed from https://github.com/developit/preact-cli/blob/master/src/lib/webpack/push-manifest.js
+ */
+
+class NetlifyServerPushPlugin {
+  apply(compiler) {
+    compiler.plugin('emit', (compilation, callback) => {
+      const routes = [];
+      let mainJs;
+      let mainCss;
+
+      for (const filename in compilation.assets) {
+        if (!/\.map$/.test(filename)) {
+          if (/route-/.test(filename)) {
+            routes.push(filename);
+          } else if (/^style(.+)\.css$/.test(filename)) {
+            mainCss = `Link: </${filename}>; rel=preload; as=style`;
+          } else if (/^bundle(.+)\.js$/.test(filename)) {
+            mainJs = `Link: </${filename}>; rel=preload; as=script`;
+          }
+        }
+      }
+
+      let headers =
+        '/*\n\tCache-Control: public, max-age=3600, no-cache\n\tAccess-Control-Max-Age: 600\n/sw.js\n\tCache-Control: private, no-cache\n/*.chunk.*.js\n\tCache-Control: public, max-age=31536000';
+
+      const redirects = `/* /index.html 200`;
+
+      routes.forEach(filename => {
+        const path = filename
+          .replace(/route-/, '/')
+          .replace(/\.chunk(\.\w+)?\.js$/, '')
+          .replace(/\/home/, '/');
+        const routeJs = `Link: </${filename}>; rel=preload; as=script`;
+        headers = `${headers}\n${path}\n\t${mainCss}\n\t${mainJs}\n\t${routeJs}`;
+      });
+
+      compilation.assets._headers = {
+        source() {
+          return headers;
+        },
+        size() {
+          return headers.length;
+        },
+      };
+
+      compilation.assets._redirects = {
+        source() {
+          return redirects;
+        },
+        size() {
+          return redirects.length;
+        },
+      };
+
+      callback();
+    });
+  }
+}
+
+module.exports = function(config) {
+  if (!config || !config.plugins) {
+    throw new Error('You need to pass the webpack config to preact-cli-plugin-netlify!');
+  }
+  config.plugins.push(new NetlifyServerPushPlugin());
+  const plugins = config.plugins;
+  for (let pluginIndex = 0; pluginIndex < plugins.length; pluginIndex++) {
+    const plugin = plugins[pluginIndex];
+    if (plugin && plugin.options && plugin.options.cacheId) {
+      // Ignore genearted _headers and _redirects files from SW precaching
+      Object.assign(plugin.options, {
+        staticFileGlobsIgnorePatterns: [
+          ...plugin.options.staticFileGlobsIgnorePatterns,
+          /_headers/,
+          /_redirects/,
+        ],
+      });
+    }
+  }
+};
