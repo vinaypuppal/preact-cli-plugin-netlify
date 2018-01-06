@@ -5,7 +5,16 @@
 
 class NetlifyServerPushPlugin {
   constructor({ redirects }) {
-    this.redirects = Array.isArray(redirects) ? redirects : [];
+    this.redirects = [];
+    if (redirects !== undefined) {
+      if (Array.isArray(redirects)) {
+        this.redirects = redirects;
+      } else {
+        throw new TypeError(
+          `redirects should be an array, but was of type '${typeof redirects}'`,
+        );
+      }
+    }
   }
 
   apply(compiler) {

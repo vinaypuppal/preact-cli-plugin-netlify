@@ -30,6 +30,29 @@ export default function (config) {
 }
 ```
 
+### Options
+
+#### Custom redirects
+
+In addition to the generated redirects, you may want to supply your
+own rewrite rules. In this case, you can pass array of custom redirects to the plugin, such as
+```js
+export default function(config) {
+    netlifyPlugin(config, {
+        redirects: [
+          '/api/* https://api.example.com/:splat 200',
+          '/custom/* https://custom.example.com/ 200'
+        ]
+    });
+}
+```
+which generates the following `_redirects` file:
+```
+/api/* https://api.example.com/:splat 200
+/custom/* https://custom.example.com/ 200
+/* /index.html 200
+```
+
 ## Generated files
 
 This plugin genererates `_headers` and `_redirects` files inside build folder
