@@ -4,6 +4,19 @@
  */
 
 class NetlifyServerPushPlugin {
+  constructor({ redirects }) {
+    this.redirects = [];
+    if (redirects !== undefined) {
+      if (Array.isArray(redirects)) {
+        this.redirects = redirects;
+      } else {
+        throw new TypeError(
+          `redirects should be an array, but was of type '${typeof redirects}'`,
+        );
+      }
+    }
+  }
+
   apply(compiler) {
     compiler.plugin('emit', (compilation, callback) => {
       const routes = [];
@@ -26,7 +39,7 @@ class NetlifyServerPushPlugin {
       let headers =
         '/*\n\tCache-Control: public, max-age=3600, no-cache\n\tAccess-Control-Max-Age: 600\n/sw.js\n\tCache-Control: private, no-cache\n/*.chunk.*.js\n\tCache-Control: public, max-age=31536000';
 
-      const redirects = `/* /index.html 200`;
+      const redirects = `${this.redirects.join('\n')}\n/* /index.html 200`;
 
       routes.forEach(filename => {
         const path = filename
@@ -34,7 +47,9 @@ class NetlifyServerPushPlugin {
           .replace(/\.chunk(\.\w+)?\.js$/, '')
           .replace(/\/home/, '/');
         const routeJs = `Link: </${filename}>; rel=preload; as=script`;
-        headers = `${headers}\n${path}\n\t${mainCss}\n\t${mainJs}\n\t${routeJs}`;
+        headers = `${headers}\n${path}\n\t${mainCss}\n\t${mainJs}\n\t${
+          routeJs
+        }`;
       });
 
       compilation.assets._headers = {
@@ -60,11 +75,13 @@ class NetlifyServerPushPlugin {
   }
 }
 
-module.exports = function(config) {
+module.exports = function(config, options = {}) {
   if (!config || !config.plugins) {
-    throw new Error('You need to pass the webpack config to preact-cli-plugin-netlify!');
+    throw new Error(
+      'You need to pass the webpack config to preact-cli-plugin-netlify!',
+    );
   }
-  config.plugins.push(new NetlifyServerPushPlugin());
+  config.plugins.push(new NetlifyServerPushPlugin(options));
   const plugins = config.plugins;
   for (let pluginIndex = 0; pluginIndex < plugins.length; pluginIndex++) {
     const plugin = plugins[pluginIndex];
