@@ -90,7 +90,7 @@ module.exports = function(config, options = {}) {
   const swBuilder = getPluginsByName(config, 'SWBuilderPlugin');
   if (
     swBuilder &&
-    ~swBuilder.length &&
+    swBuilder.length > 0 &&
     swBuilder[0].plugin &&
     swBuilder[0].plugin.brotli_
   ) {
