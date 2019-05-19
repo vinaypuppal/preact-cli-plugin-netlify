@@ -6,7 +6,7 @@
 class NetlifyServerPushPlugin {
   constructor({ redirects, brotli = false }) {
     this.redirects = [];
-    this.brotli = brotli
+    this.brotli = brotli;
     if (redirects !== undefined) {
       if (Array.isArray(redirects)) {
         this.redirects = redirects;
@@ -41,7 +41,7 @@ class NetlifyServerPushPlugin {
         '/*\n\tCache-Control: public, max-age=3600, no-cache\n\tAccess-Control-Max-Age: 600\n/sw.js\n\tCache-Control: private, no-cache\n/*.chunk.*.js\n\tCache-Control: public, max-age=31536000';
 
       if (this.brotli) {
-        headers += '\n/*.br\n\tcontent-encoding: br'
+        headers += '\n/*.br\n\tcontent-encoding: br';
       }
 
       const redirects = `${this.redirects.join('\n')}\n/* /index.html 200`;
@@ -87,11 +87,16 @@ module.exports = function(config, options = {}) {
     );
   }
 
-  const swBuilder = getPluginsByName(config, 'SWBuilderPlugin')
-  if ( swBuilder && swBuilder.length && swBuilder[0].plugin && swBuilder[0].plugin.brotli_) {
-    options.brotli = true
+  const swBuilder = getPluginsByName(config, 'SWBuilderPlugin');
+  if (
+    swBuilder &&
+    ~swBuilder.length &&
+    swBuilder[0].plugin &&
+    swBuilder[0].plugin.brotli_
+  ) {
+    options.brotli = true;
   }
-  
+
   config.plugins.push(new NetlifyServerPushPlugin(options));
   const plugins = config.plugins;
   for (let pluginIndex = 0; pluginIndex < plugins.length; pluginIndex++) {
@@ -111,8 +116,7 @@ module.exports = function(config, options = {}) {
 
 function getPluginsByName(config, name) {
   return getPlugins(config).filter(
-    w =>
-      w.plugin && w.plugin.constructor && w.plugin.constructor.name === name
+    w => w.plugin && w.plugin.constructor && w.plugin.constructor.name === name,
   );
 }
 
