@@ -36,6 +36,7 @@ export default function (config) {
 
 In addition to the generated redirects, you may want to supply your
 own rewrite rules. In this case, you can pass array of custom redirects to the plugin, such as
+
 ```js
 export default function(config) {
     netlifyPlugin(config, {
@@ -46,11 +47,32 @@ export default function(config) {
     });
 }
 ```
+
 which generates the following `_redirects` file:
-```
+
+```yml
 /api/* https://api.example.com/:splat 200
 /custom/* https://custom.example.com/ 200
 /* /index.html 200
+```
+
+### Brotli compression
+
+Preact-CLI have a flag `--brotli` which automatically generates brotli compressed assets for all the javascript files. To serve these files using netlify you can use `brotli` option as shown below.
+
+```js
+  export default function(config) {
+    netlifyPlugin(config, {
+        brotli: true
+    });
+}
+```
+
+Which addes below config in `_headers` file
+
+```yml
+/*.br
+  content-encoding: br
 ```
 
 ## Generated files
