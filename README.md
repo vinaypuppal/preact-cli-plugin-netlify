@@ -69,7 +69,7 @@ Preact-CLI have a flag `--brotli` which automatically generates brotli compresse
 }
 ```
 
-Which addes below config in `_headers` file
+Which generates below config in `_headers` file
 
 ```yml
 /*.br
