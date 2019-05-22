@@ -59,6 +59,7 @@ which generates the following `_redirects` file:
 ### Brotli compression
 
 Preact-CLI have a flag `--brotli` which automatically generates brotli compressed assets for all the javascript files. To serve these files using netlify you can use `brotli` option as shown below.
+> For more info please check this blog post https://medium.com/@prateekbh/using-brotli-with-preact-cli-3-ca03125b1e2b
 
 ```js
   export default function(config) {
