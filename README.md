@@ -62,9 +62,9 @@ Preact-CLI have a flag `--brotli` which automatically generates brotli compresse
 > For more info please check this blog post https://medium.com/@prateekbh/using-brotli-with-preact-cli-3-ca03125b1e2b
 
 ```js
-  export default function(config) {
+  export default function(config, env) {
     netlifyPlugin(config, {
-        brotli: true
+        brotli: env.brotli
     });
 }
 ```
