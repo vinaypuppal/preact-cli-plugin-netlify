@@ -5,7 +5,6 @@
   "main": "index.js",
   "scripts": {
     "prepublish": "npm run lint",
-    "precommit": "lint-staged",
     "lint": "xo",
     "test": "npm run lint"
   },
@@ -26,12 +25,12 @@
   },
   "homepage": "https://github.com/vinaypuppal/preact-cli-plugin-netlify#readme",
   "devDependencies": {
-    "babel-eslint": "^8.0.2",
-    "eslint-config-prettier": "^2.7.0",
-    "husky": "^0.14.3",
-    "lint-staged": "^4.3.0",
-    "prettier": "^1.8.2",
-    "xo": "^0.18.2"
+    "babel-eslint": "^10.0.2",
+    "eslint-config-prettier": "^6.0.0",
+    "husky": "^3.0.0",
+    "lint-staged": "^9.2.0",
+    "prettier": "^1.18.2",
+    "xo": "^0.24.0"
   },
   "xo": {
     "parser": "babel-eslint",
@@ -52,5 +51,10 @@
       "xo",
       "git add"
     ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   }
 }
