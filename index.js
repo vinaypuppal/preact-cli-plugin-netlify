@@ -12,7 +12,7 @@ class NetlifyServerPushPlugin {
         this.redirects = redirects;
       } else {
         throw new TypeError(
-          `redirects should be an array, but was of type '${typeof redirects}'`,
+          `redirects should be an array, but was of type '${typeof redirects}'`
         );
       }
     }
@@ -52,9 +52,7 @@ class NetlifyServerPushPlugin {
           .replace(/\.chunk(\.\w+)?\.js$/, '')
           .replace(/\/home/, '/');
         const routeJs = `Link: </${filename}>; rel=preload; as=script`;
-        headers = `${headers}\n${path}\n\t${mainCss}\n\t${mainJs}\n\t${
-          routeJs
-        }`;
+        headers = `${headers}\n${path}\n\t${mainCss}\n\t${mainJs}\n\t${routeJs}`;
       });
 
       compilation.assets._headers = {
@@ -90,7 +88,7 @@ class NetlifyServerPushPlugin {
 module.exports = function(config, options = {}) {
   if (!config || !config.plugins) {
     throw new Error(
-      'You need to pass the webpack config to preact-cli-plugin-netlify!',
+      'You need to pass the webpack config to preact-cli-plugin-netlify!'
     );
   }
 
@@ -105,7 +103,7 @@ module.exports = function(config, options = {}) {
   }
 
   config.plugins.push(new NetlifyServerPushPlugin(options));
-  const plugins = config.plugins;
+  const { plugins } = config;
   for (let pluginIndex = 0; pluginIndex < plugins.length; pluginIndex++) {
     const plugin = plugins[pluginIndex];
     if (plugin && plugin.options && plugin.options.cacheId) {
@@ -123,7 +121,7 @@ module.exports = function(config, options = {}) {
 
 function getPluginsByName(config, name) {
   return getPlugins(config).filter(
-    w => w.plugin && w.plugin.constructor && w.plugin.constructor.name === name,
+    w => w.plugin && w.plugin.constructor && w.plugin.constructor.name === name
   );
 }
 
