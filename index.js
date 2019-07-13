@@ -19,7 +19,7 @@ class NetlifyServerPushPlugin {
   }
 
   apply(compiler) {
-    compiler.plugin('emit', (compilation, callback) => {
+    const handler = (compilation, callback) => {
       const routes = [];
       // Set default value as comment incase if this file is not present
       let mainJs = '# no js files';
@@ -76,7 +76,14 @@ class NetlifyServerPushPlugin {
       };
 
       callback();
-    });
+      return compilation;
+    };
+
+    if (compiler.hooks) {
+      compiler.hooks.emit.tapAsync('NetlifyServerPushPlugin', handler);
+    } else {
+      compiler.plugin('emit', handler);
+    }
   }
 }
 
