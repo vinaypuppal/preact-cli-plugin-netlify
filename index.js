@@ -26,7 +26,6 @@ class NetlifyServerPushPlugin {
       let mainCss = '# no css files';
 
       const hasEsm = Object.keys(compilation.assets).filter(filename => /\.esm\.js$/.test(filename)).length !== 0;
-      const bundleReg = hasEsm ? /^bundle(.+)\.esm\.js$/ : /^bundle(.+)\.js$/;
 
       for (const filename in compilation.assets) {
         if (!/\.map$/.test(filename)) {
@@ -34,10 +33,12 @@ class NetlifyServerPushPlugin {
             routes.push(filename);
           } else if (/^(style|bundle)(.+)\.css$/.test(filename)) {
             mainCss = `Link: </${filename}>; rel=preload; as=style`;
-          } else if (filename.match(bundleReg)) {
+          } else if (hasEsm && /^bundle(.+)\.esm\.js$/.test(filename)) {
+            mainJs = `Link: </${filename}>; rel=preload; as=script; crossOrigin=anonymous`;
+          } else if (!hasEsm && /^bundle(.+)\.js$/.test(filename)) {
             mainJs = `Link: </${filename}>; rel=preload; as=script`;
           }
-        }
+      }
       }
 
       let headers =
