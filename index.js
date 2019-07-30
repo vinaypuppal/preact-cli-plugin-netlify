@@ -25,7 +25,10 @@ class NetlifyServerPushPlugin {
       let mainJs = '# no js files';
       let mainCss = '# no css files';
 
-      const hasEsm = Object.keys(compilation.assets).filter(filename => /\.esm\.js$/.test(filename)).length !== 0;
+      const hasEsm =
+        Object.keys(compilation.assets).filter(filename =>
+          /\.esm\.js$/.test(filename)
+        ).length !== 0;
 
       for (const filename in compilation.assets) {
         if (!/\.map$/.test(filename)) {
@@ -38,7 +41,7 @@ class NetlifyServerPushPlugin {
           } else if (!hasEsm && /^bundle(.+)\.js$/.test(filename)) {
             mainJs = `Link: </${filename}>; rel=preload; as=script`;
           }
-      }
+        }
       }
 
       let headers =
@@ -50,7 +53,7 @@ class NetlifyServerPushPlugin {
 
       const redirects = `${this.redirects.join('\n')}\n/* /index.html 200`;
 
-      if (!routes.length) {
+      if (routes.length === 0) {
         headers += `\n/*\n\t${mainCss}\n\t${mainJs}`;
       }
 
