@@ -34,7 +34,7 @@ class NetlifyServerPushPlugin {
           } else if (/^(style|bundle)(.+)\.css$/.test(filename)) {
             mainCss = `Link: </${filename}>; rel=preload; as=style`;
           } else if (hasEsm && /^bundle(.+)\.esm\.js$/.test(filename)) {
-            mainJs = `Link: </${filename}>; rel=preload; as=script; crossOrigin=anonymous`;
+            mainJs = `Link: </${filename}>; rel=preload; as=script; crossorigin=anonymous`;
           } else if (!hasEsm && /^bundle(.+)\.js$/.test(filename)) {
             mainJs = `Link: </${filename}>; rel=preload; as=script`;
           }
