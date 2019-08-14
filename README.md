@@ -6,6 +6,12 @@ Preact cli plugin for generating h2push headers and redirect(for SPA) rules for 
 [![XO code style](https://img.shields.io/badge/code_style-XO-5ed9c7.svg)](https://github.com/sindresorhus/xo)
 [![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 
+---
+
+**Netlify has disabled H2 Server Push. Please check [issue #11](https://github.com/vinaypuppal/preact-cli-plugin-netlify/issues/11) for more info.**
+
+---
+
 ## Installation
 
 ```bash
