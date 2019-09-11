@@ -36,7 +36,7 @@ class NetlifyServerPushPlugin {
         return;
       }
       manifest = JSON.parse(manifest.source());
-      console.log({manifest});
+
       for (const filename in compilation.assets) {
         if (!/\.map$/.test(filename)) {
           if (/route-/.test(filename)) {
@@ -73,17 +73,6 @@ class NetlifyServerPushPlugin {
         })
         headers = `${headers}\n${routePreloadText}`;
       }
-
-
-
-      // routes.forEach(filename => {
-      //   const path = filename
-      //     .replace(/route-/, '/')
-      //     .replace(/\.chunk(\.\w+)?\.js$/, '')
-      //     .replace(/\/home/, '/');
-      //   const routeJs = `Link: </${filename}>; rel=preload; as=script`;
-      //   headers = `${headers}\n${path}\n\t${mainCss}\n\t${mainJs}\n\t${routeJs}`;
-      // });
 
       compilation.assets._headers = {
         source() {
