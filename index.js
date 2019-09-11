@@ -32,6 +32,7 @@ class NetlifyServerPushPlugin {
 
       let manifest = compilation.assets['push-manifest.json'];
       if (!manifest) {
+        // on pre-render build this is not present and thus need an early exit
         callback();
         return;
       }
