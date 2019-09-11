@@ -30,6 +30,13 @@ class NetlifyServerPushPlugin {
           /\.esm\.js$/.test(filename)
         ).length !== 0;
 
+      let manifest = compilation.assets['push-manifest.json'];
+      if (!manifest) {
+        callback();
+        return;
+      }
+      manifest = JSON.parse(manifest.source());
+      console.log({manifest});
       for (const filename in compilation.assets) {
         if (!/\.map$/.test(filename)) {
           if (/route-/.test(filename)) {
@@ -57,14 +64,26 @@ class NetlifyServerPushPlugin {
         headers += `\n/*\n\t${mainCss}\n\t${mainJs}`;
       }
 
-      routes.forEach(filename => {
-        const path = filename
-          .replace(/route-/, '/')
-          .replace(/\.chunk(\.\w+)?\.js$/, '')
-          .replace(/\/home/, '/');
-        const routeJs = `Link: </${filename}>; rel=preload; as=script`;
-        headers = `${headers}\n${path}\n\t${mainCss}\n\t${mainJs}\n\t${routeJs}`;
-      });
+      for(const route in manifest) {
+        const files = Object.keys(manifest[route]);
+        let routePreloadText = `${route}`;
+        files.forEach(file => {
+          const details = manifest[route][file];
+          routePreloadText += `\n\tLink: </${file}>; rel=preload; as=${details.type}`
+        })
+        headers = `${headers}\n${routePreloadText}`;
+      }
+
+
+
+      // routes.forEach(filename => {
+      //   const path = filename
+      //     .replace(/route-/, '/')
+      //     .replace(/\.chunk(\.\w+)?\.js$/, '')
+      //     .replace(/\/home/, '/');
+      //   const routeJs = `Link: </${filename}>; rel=preload; as=script`;
+      //   headers = `${headers}\n${path}\n\t${mainCss}\n\t${mainJs}\n\t${routeJs}`;
+      // });
 
       compilation.assets._headers = {
         source() {
