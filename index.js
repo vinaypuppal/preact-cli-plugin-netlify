@@ -45,6 +45,9 @@ class NetlifyServerPushPlugin {
         files.forEach(file => {
           const details = manifest[route][file];
           routePreloadText += `\n\tLink: </${file}>; rel=preload; as=${details.type}`
+          if (/^bundle(.+)\.esm\.js$/.test(filename)) {
+            routePreloadText += '; crossorigin=anonymous';
+          }
         })
         headers = `${headers}\n${routePreloadText}`;
       }
