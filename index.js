@@ -21,14 +21,6 @@ class NetlifyServerPushPlugin {
   apply(compiler) {
     const handler = (compilation, callback) => {
       const routes = [];
-      // Set default value as comment incase if this file is not present
-      let mainJs = '# no js files';
-      let mainCss = '# no css files';
-
-      const hasEsm =
-        Object.keys(compilation.assets).filter(filename =>
-          /\.esm\.js$/.test(filename)
-        ).length !== 0;
 
       let manifest = compilation.assets['push-manifest.json'];
       if (!manifest) {
@@ -38,20 +30,6 @@ class NetlifyServerPushPlugin {
       }
       manifest = JSON.parse(manifest.source());
 
-      for (const filename in compilation.assets) {
-        if (!/\.map$/.test(filename)) {
-          if (/route-/.test(filename)) {
-            routes.push(filename);
-          } else if (/^(style|bundle)(.+)\.css$/.test(filename)) {
-            mainCss = `Link: </${filename}>; rel=preload; as=style`;
-          } else if (hasEsm && /^bundle(.+)\.esm\.js$/.test(filename)) {
-            mainJs = `Link: </${filename}>; rel=preload; as=script; crossorigin=anonymous`;
-          } else if (!hasEsm && /^bundle(.+)\.js$/.test(filename)) {
-            mainJs = `Link: </${filename}>; rel=preload; as=script`;
-          }
-        }
-      }
-
       let headers =
         '/*\n\tCache-Control: public, max-age=3600, no-cache\n\tAccess-Control-Max-Age: 600\n/sw.js\n\tCache-Control: private, no-cache\n/*.chunk.*.js\n\tCache-Control: public, max-age=31536000';
 
@@ -60,10 +38,6 @@ class NetlifyServerPushPlugin {
       }
 
       const redirects = `${this.redirects.join('\n')}\n/* /index.html 200`;
-
-      if (routes.length === 0) {
-        headers += `\n/*\n\t${mainCss}\n\t${mainJs}`;
-      }
 
       for(const route in manifest) {
         const files = Object.keys(manifest[route]);
