@@ -20,8 +20,6 @@ class NetlifyServerPushPlugin {
 
   apply(compiler) {
     const handler = (compilation, callback) => {
-      const routes = [];
-
       let manifest = compilation.assets['push-manifest.json'];
       if (!manifest) {
         // on pre-render build this is not present and thus need an early exit
@@ -39,16 +37,16 @@ class NetlifyServerPushPlugin {
 
       const redirects = `${this.redirects.join('\n')}\n/* /index.html 200`;
 
-      for(const route in manifest) {
+      for (const route in manifest) {
         const files = Object.keys(manifest[route]);
         let routePreloadText = `${route}`;
         files.forEach(file => {
           const details = manifest[route][file];
-          routePreloadText += `\n\tLink: </${file}>; rel=preload; as=${details.type}`
-          if (/^bundle(.+)\.esm\.js$/.test(filename)) {
+          routePreloadText += `\n\tLink: </${file}>; rel=preload; as=${details.type}`;
+          if (/^bundle(.+)\.esm\.js$/.test(file)) {
             routePreloadText += '; crossorigin=anonymous';
           }
-        })
+        });
         headers = `${headers}\n${routePreloadText}`;
       }
 
