@@ -22,10 +22,11 @@ class NetlifyServerPushPlugin {
     const handler = (compilation, callback) => {
       let manifest = compilation.assets['push-manifest.json'];
       if (!manifest) {
-        // on pre-render build this is not present and thus need an early exit
+        // On pre-render build this is not present and thus need an early exit
         callback();
         return;
       }
+
       manifest = JSON.parse(manifest.source());
 
       let headers =
@@ -37,6 +38,7 @@ class NetlifyServerPushPlugin {
 
       const redirects = `${this.redirects.join('\n')}\n/* /index.html 200`;
 
+      // eslint-disable-next-line guard-for-in
       for (const route in manifest) {
         const files = Object.keys(manifest[route]);
         let routePreloadText = `${route}`;
