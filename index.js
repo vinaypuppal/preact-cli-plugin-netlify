@@ -4,9 +4,11 @@
  */
 
 class NetlifyServerPushPlugin {
-  constructor({ redirects, brotli = false }) {
+  constructor({ redirects, brotli = false, mutateManifest } = {}) {
     this.redirects = [];
     this.brotli = brotli;
+    this.mutateManifest_ = mutateManifest;
+
     if (redirects !== undefined) {
       if (Array.isArray(redirects)) {
         this.redirects = redirects;
@@ -29,6 +31,11 @@ class NetlifyServerPushPlugin {
 
       manifest = JSON.parse(manifest.source());
 
+      // This lets user adds additional resources and mutate some route to become dynamic.
+      if (this.mutateManifest_) {
+        manifest = this.mutateManifest_(manifest);
+      }
+
       let headers =
         '/*\n\tCache-Control: public, max-age=3600, no-cache\n\tAccess-Control-Max-Age: 600\n/sw.js\n\tCache-Control: private, no-cache\n/*.chunk.*.js\n\tCache-Control: public, max-age=31536000';
 
@@ -42,13 +49,19 @@ class NetlifyServerPushPlugin {
       for (const route in manifest) {
         const files = Object.keys(manifest[route]);
         let routePreloadText = `${route}`;
-        files.forEach(file => {
+        const cssFiles = files.filter(file => file.endsWith('.css'));
+        const jsFiles = files.filter(file => file.endsWith('.js'));
+        const otherFiles = files.filter(file => !file.endsWith('.js') && !file.endsWith('.css'));
+        const addFileToHeader = file => {
           const details = manifest[route][file];
           routePreloadText += `\n\tLink: </${file}>; rel=preload; as=${details.type}`;
           if (/^bundle(.+)\.esm\.js$/.test(file)) {
             routePreloadText += '; crossorigin=anonymous';
           }
-        });
+        };
+        cssFiles.forEach(addFileToHeader);
+        jsFiles.forEach(addFileToHeader);
+        otherFiles.forEach(addFileToHeader);
         headers = `${headers}\n${routePreloadText}`;
       }
 
