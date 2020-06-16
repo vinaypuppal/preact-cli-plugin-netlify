@@ -62,6 +62,24 @@ which generates the following `_redirects` file:
 /* /index.html 200
 ```
 
+### mutateManifest
+This plugin consumes the `push-manifest.json` created by `preact-cli` and derive Netlify headers from it.
+There are cases where you might want to add preloads to a certain route or even add/modify a route(e.g. for dymanic routes you'll need to add a * to the route).
+
+For this use mutateManifest as shown to mutate the JSON and the headers will be generated accordingly.
+
+```js
+export default function(config) {
+    netlifyPlugin(config, {
+        mutateManifest: (routes)  => {
+          routes['/'].push(
+            // Add additonal assets you want to be preloaded at the index route
+          );
+          return routes;
+        }
+    });
+}
+```
 ### Brotli compression
 
 Preact-CLI have a flag `--brotli` which automatically generates brotli compressed assets for all the javascript files. To serve these files using netlify you can use `brotli` option as shown below.
