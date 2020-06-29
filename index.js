@@ -51,7 +51,9 @@ class NetlifyServerPushPlugin {
         let routePreloadText = `${route}`;
         const cssFiles = files.filter(file => file.endsWith('.css'));
         const jsFiles = files.filter(file => file.endsWith('.js'));
-        const otherFiles = files.filter(file => !file.endsWith('.js') && !file.endsWith('.css'));
+        const otherFiles = files.filter(
+          file => !file.endsWith('.js') && !file.endsWith('.css')
+        );
         const addFileToHeader = file => {
           const details = manifest[route][file];
           routePreloadText += `\n\tLink: </${file}>; rel=preload; as=${details.type}`;
@@ -59,6 +61,7 @@ class NetlifyServerPushPlugin {
             routePreloadText += '; crossorigin=anonymous';
           }
         };
+
         cssFiles.forEach(addFileToHeader);
         jsFiles.forEach(addFileToHeader);
         otherFiles.forEach(addFileToHeader);
