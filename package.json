@@ -1,6 +1,6 @@
 {
   "name": "preact-cli-plugin-netlify",
-  "version": "1.4.0",
+  "version": "1.6.0",
   "description": "Preact cli plugin for generating h2push headers and redirect rules for netlify",
   "main": "index.js",
   "scripts": {
